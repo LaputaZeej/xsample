@@ -1,0 +1,18 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://mirrors.tencent.com/nexus/repository/maven-public/'
+        }
+        maven {
+            url 'https://maven.aliyun.com/nexus/content/groups/public/'
+        }
+        maven { url 'https://jitpack.io' }
+        maven { url "https://maven.aliyun.com/repository/public" }
+        google()
+        jcenter() // Warning: this repository is going to shut down soon
+    }
+}
+rootProject.name = "x-sample"
+include ':app'
