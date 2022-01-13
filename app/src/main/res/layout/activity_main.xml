@@ -28,4 +28,32 @@
         android:text="compose"
         />
 
+    <Button
+        android:id="@+id/action_binder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="binder"
+        />
+
+    <Button
+        android:id="@+id/action_binder_proxy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="binder_proxy"
+        />
+
+    <Button
+        android:id="@+id/action_binder_aidl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="binder_aidl"
+        />
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
 </androidx.appcompat.widget.LinearLayoutCompat>

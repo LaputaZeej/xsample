@@ -9,9 +9,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 object LocationDataSource {
     @SuppressLint("MissingPermission")
@@ -19,7 +21,7 @@ object LocationDataSource {
         val callback = LocationListener {
             try{
                 Log.e("locations",it.toString())
-                offer(it.display)
+                trySendBlocking(it.display)
                 Thread{
                     while (true){
                         Thread.sleep(1000)

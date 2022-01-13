@@ -1,5 +1,7 @@
 package com.laputa.zeej.std_0010_kotlin.function
 
+import com.laputa.zeej.std_0010_kotlin.function.KtListFunctor.map
+
 // kt 模拟 Typeclass
 
 // 表示类型构造器F应用参数A产生的类型
@@ -31,6 +33,16 @@ object KtListFunctor : Functor<KtList.K> {
 //            is Nil -> Nil // 为什么这样不行
             else -> Nil
         }
+    }
+}
+
+ fun <A, B> Kind<KtList.K, A>.map2(f: (A) -> B): Kind<KtList.K, B> {
+    return when (this) {
+        is Cons<A> -> {
+            Cons(f(this.head), this.tail.map2(f).unwrap())
+        }
+//            is Nil -> Nil // 为什么这样不行
+        else -> Nil
     }
 }
 
@@ -167,6 +179,12 @@ fun main() {
         }
         println(result)
     }
+//    val old = Cons(listOf(1, 2), Nil)
+//    println(old)
+//    val result = old.map2 {
+//        "map2 后的东西 $it"
+//    }
+//    println(result)
     println("********************************IntEq")
     IntEq.run {
         val a = 1

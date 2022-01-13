@@ -1,5 +1,7 @@
 package com.laputa.zeej.bit
 
+import java.nio.ByteBuffer
+
 fun Long.toByteArray(): ByteArray {
     val result = ByteArray(Long.SIZE_BYTES)
     // 0x 00 00 00 00 00 00 04 d2
@@ -96,4 +98,13 @@ fun main() {
     test(e,true)
     val ee = byteArrayOf(0x1f,0x02,0x03,0x04,0x05,0x06,0x07,0x08)
     test(ee,false)
+
+
+    // ...ByteBuffer
+    println(ee.toLongWithByteBuffer().toString(16))
+}
+
+
+fun ByteArray.toLongWithByteBuffer():Long{
+    return ByteBuffer.wrap(this).getLong()
 }

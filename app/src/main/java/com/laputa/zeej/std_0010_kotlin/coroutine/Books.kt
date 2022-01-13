@@ -1,7 +1,12 @@
 package com.laputa.zeej.std_0010_kotlin.coroutine
 
+import com.google.common.base.Ascii
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.yield
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import kotlin.coroutines.*
 
 // 《深入理解Kotlin协程》
@@ -9,10 +14,14 @@ suspend fun main() {
     println("【start】")
 //    t1()
 //    bookT2()
-    bookT3()
+//    bookT3()
 //    bookT4()
 //    bookT7()
 //    bookT8()
+//    bookT9()
+//    bookT10()
+//    bookT11()
+    bookT12()
     println("【end】")
     readLine()
 }
@@ -49,7 +58,7 @@ internal fun bookT3() {
     suspend {
         println("in coroutine")
         delay(1000)
-        "Hello Coroutines"
+        "Hello Coroutines bookT3"
     }.startCoroutine(object : Continuation<String> {
         override val context: CoroutineContext
             get() = EmptyCoroutineContext
@@ -231,7 +240,6 @@ internal fun bookT8() {
     })
 
 
-
 //    suspend {
 //        "suspend ......."
 //    }.createCoroutine(object : Continuation<String> {
@@ -243,6 +251,106 @@ internal fun bookT8() {
 //        }
 //    }).resume(Unit)
 }
+
+internal suspend fun bookT9001(): String {
+    delay(300)
+    return "111111"
+}
+
+// 挂起函数suspend 反射
+internal fun bookT9() {
+    ::bookT9001.call(object : Continuation<String> {
+        override val context: CoroutineContext
+            get() = EmptyCoroutineContext
+
+        override fun resumeWith(result: Result<String>) {
+            println("result = $result")
+        }
+
+    })
+}
+
+val t10 = sequence<Long> {
+    yield(1)
+    var cur = 1L
+    var next = 1L
+    while (true) {
+        yield(next)
+        next += cur
+        cur = next - cur
+    }
+}
+
+internal fun bookT10() {
+    t10.take(10).forEach(::println)
+}
+
+// 实现js async/await
+
+interface AsyncScope
+
+fun asyncJs(
+    context: CoroutineContext = EmptyCoroutineContext,
+    block: suspend AsyncScope.() -> Unit
+) {
+    val completion = AsyncCoroutine(context = context)
+    block.startCoroutine(completion, completion)
+}
+
+class AsyncCoroutine(override val context: CoroutineContext = EmptyCoroutineContext) :
+    Continuation<Unit>, AsyncScope {
+    override fun resumeWith(result: Result<Unit>) {
+        result.getOrThrow()
+    }
+}
+
+suspend fun <T> AsyncScope.awaitJs(block: () -> T) = suspendCoroutine<T> {
+
+    try {
+        val call = block()
+        it.resume(call)
+    } catch (e: Throwable) {
+        it.resumeWithException(e)
+    }
+}
+
+
+internal fun bookT11() {
+    asyncJs {
+        val result = awaitJs<String> {
+            Thread.sleep(2000)
+            "hahahaha"
+        }
+        println("result = $result")
+
+    }
+
+}
+
+// 实现delay
+// 不阻塞线程 延迟执行
+private val pool = Executors.newScheduledThreadPool(0){
+    Thread(it,"pool").apply { isDaemon = true }
+}
+internal suspend fun delayX(time:Long,unit:TimeUnit = TimeUnit.MILLISECONDS){
+    if(time<=0)return
+    suspendCoroutine<Unit> {
+        pool.schedule({
+            it.resume(Unit)
+        },time,unit)
+    }
+}
+
+internal fun bookT12() {
+    runBlocking {
+        delayX(1000)
+        println("delayX 1000")
+    }
+}
+
+
+
+
 
 
 

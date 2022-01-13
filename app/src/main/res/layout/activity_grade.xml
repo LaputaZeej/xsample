@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".std_0006_android.binder.case01.GradeActivity">
+
+    <Button
+        android:id="@+id/action_bind"
+        android:text="绑定"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/action_select"
+        android:text="查询"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:background="#f98"
+        android:layout_weight="1"
+        android:padding="16dp"
+        android:id="@+id/tv_info"
+        android:text="..."
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

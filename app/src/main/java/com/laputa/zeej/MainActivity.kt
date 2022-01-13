@@ -12,6 +12,10 @@ import com.laputa.zeej.flow.LocationActivity
 import com.laputa.zeej.gsy.GSYExoHttpDataSourceFactory
 import com.laputa.zeej.gsy.Gsy2Activity
 import com.laputa.zeej.gsy.GsyActivity
+import com.laputa.zeej.std_0006_android.binder.case01.GradeActivity
+import com.laputa.zeej.std_0006_android.binder.case02.ProxyGradeActivity
+import com.laputa.zeej.std_0006_android.binder.case03.AIDLGradeActivity
+import kotlinx.coroutines.delay
 import tv.danmaku.ijk.media.exo2.ExoMediaSourceInterceptListener
 import tv.danmaku.ijk.media.exo2.ExoSourceManager
 import java.io.File
@@ -43,7 +47,29 @@ class MainActivity : AppCompatActivity() {
         binding.actionCompose.setOnClickListener {
             ComposeActivity.ship(this)
         }
+
+        binding.actionBinder.setOnClickListener {
+            GradeActivity.ship(this)
+        }
+        binding.actionBinderProxy.setOnClickListener {
+            ProxyGradeActivity.ship(this)
+        }
+
+        binding.actionBinderAidl.setOnClickListener {
+            AIDLGradeActivity.ship(this)
+        }
         initGsy()
+
+        // TextView为match_parent
+        // 不报错
+//        val t1 = "123"
+//        // 报错 因为超过1行 要重新计算高度 触发了检查
+//        val t = "123assssssss123assssssss123assssssss123assssssss123assssssss123assssssss123assssssss123assssssss123assssssss123assssssss"
+//        Thread{
+//            Thread.sleep(1000) // 在wrap_content情况下，延迟一定报错。
+//            binding.tvInfo.setText(t1)
+//        }.start()
+
     }
 
     /**

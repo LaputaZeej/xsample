@@ -29,6 +29,11 @@ class LocationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLocationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        MainScope().launch {
+            //
+        }
+
 // [0] 队列缓存
         lifecycleScope.launchWhenResumed {
             LocationDataSource.locationFlow(this@LocationActivity)
