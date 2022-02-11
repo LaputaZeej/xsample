@@ -34,7 +34,8 @@ fun main() {
 //    exception004()
 //    exception005()
 //    exception006()
-    exception00601()
+//    exception00601()
+    exception00602()
 //    exception007()
 //    exception008()
 //    exception009()
@@ -126,7 +127,8 @@ internal fun exception00601() {
     }
     val coroutineScope = CoroutineScope(Dispatchers.IO + Job())
     val job = coroutineScope.launch {
-        val innerCoroutine = CoroutineScope(Dispatchers.IO + Job() + coroutineExceptionHandler) // 注意新的Job 不构成父子关系
+        val innerCoroutine =
+            CoroutineScope(Dispatchers.IO + Job() + coroutineExceptionHandler) // 注意新的Job 不构成父子关系
         val innerJob = innerCoroutine.async(coroutineExceptionHandler) { // 注意async和launch
             delay(1000)
             throw IllegalStateException("test error !")
@@ -144,6 +146,27 @@ internal fun exception00601() {
 //        job.cancel()
 //    }
     job.invokeOnCompletion {
+        println("outer job is cancel!")
+    }
+    readLine()
+}
+
+internal fun exception00602() {
+    val coroutineScope = CoroutineScope(Dispatchers.IO + Job())
+    val outerJob = coroutineScope.launch {
+        val innerJob = launch(Job()) {
+            delay(2000)
+            println("inner job done!")
+        }
+        innerJob.invokeOnCompletion {
+            println("inner job is cancel!")
+        }
+    }
+    coroutineScope.launch {
+        delay(1000)
+        outerJob.cancel()
+    }
+    outerJob.invokeOnCompletion {
         println("outer job is cancel!")
     }
     readLine()
