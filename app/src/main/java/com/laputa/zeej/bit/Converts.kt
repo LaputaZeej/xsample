@@ -20,20 +20,19 @@ fun Long.toByteArray(): ByteArray {
     return result
 }
 
-fun ByteArray.toLong(debug:Boolean = false): Long {
+fun ByteArray.toLong(debug: Boolean = false): Long {
     val now = this
     val size = Long.SIZE_BYTES
     val temp = ByteArray(size)
     // 05 06 07 08 09       8-5
     // 00 00 00 05 06 07 08 09
-    val diff = size-now.size
+    val diff = size - now.size
     println("diff = $diff")
-    temp.forEachIndexed{
-        index,_->
-        if (index<diff){
+    temp.forEachIndexed { index, _ ->
+        if (index < diff) {
             temp[index] = 0
-        }else{
-            temp[index]=now[index-diff]
+        } else {
+            temp[index] = now[index - diff]
         }
     }
 //    val v0 = (temp[0].toInt() and 0xff).toLong() shl 56
@@ -60,12 +59,12 @@ fun ByteArray.toLong(debug:Boolean = false): Long {
 //    return total
 
     return temp.foldIndexed(0L) { index, acc, byte ->
-        val m:Int   = size - index - 1
+        val m: Int = size - index - 1
         val next = ch(byte)
-        val result :Long = if(debug) {
+        val result: Long = if (debug) {
             (next shl m * 8).toLong() // 1
         } else {
-                (next.toLong() shl  m*8) // 2
+            (next.toLong() shl m * 8) // 2
         }
         //println("   [$index]next = ${next.toString(16)} ,m=$m result=$result")
         acc + result
@@ -83,28 +82,28 @@ fun main() {
     println("c = ${c.toString(16)}")
 
 
-    fun test(value:ByteArray,debug: Boolean){
-        println("---------------------------")
-        val f :Long= value.toLong(debug)
+    fun test(value: ByteArray, debug: Boolean, tag: String) {
+        println("---------------------------$tag")
+        val f: Long = value.toLong(debug)
         println("f = ${f.toString(16)}")
         val g = f.toByteArray().toLong()
         println("g = ${g.toString(16)}")
     }
 
-    test(byteArrayOf(0x05,0x06,0x07,0x08),true)
-    test(byteArrayOf(0x05,0x06,0x07,0x08),false)
+    // test(byteArrayOf(0x05,0x06,0x07,0x08),true)
+//    test(byteArrayOf(0x05,0x06,0x07,0x08),false)
 
-    val e = byteArrayOf(0x1f,0x02,0x03,0x04,0x05,0x06,0x07,0x08)
-    test(e,true)
-    val ee = byteArrayOf(0x1f,0x02,0x03,0x04,0x05,0x06,0x07,0x08)
-    test(ee,false)
+    val e = byteArrayOf(0x1f, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07)
+    test(e, true, "e")
+    test(e, false, "ee")
 
 
     // ...ByteBuffer
-    println(ee.toLongWithByteBuffer().toString(16))
+    println("=======================")
+    println(e.toLongWithByteBuffer().toString(16))
 }
 
 
-fun ByteArray.toLongWithByteBuffer():Long{
+fun ByteArray.toLongWithByteBuffer(): Long {
     return ByteBuffer.wrap(this).getLong()
 }

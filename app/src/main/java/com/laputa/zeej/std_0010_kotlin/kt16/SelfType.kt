@@ -28,7 +28,7 @@ class BBuilder : ABuilder<BBuilder>() {
 
 fun main() {
     //val s0 = ABuilder().setId("12131").setName("he")
-    val s:ABuilder<*> = ABuilder<ABuilder<*>>().setId("12131").setName("he")
+    val s:ABuilder<*> = ABuilder().setId("12131").setName("he") // 1.6 之前不行。
     val s2:BBuilder = BBuilder().setId("12131").setName("he").setAge(1)
 
 }

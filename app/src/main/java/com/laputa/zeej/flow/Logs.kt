@@ -2,7 +2,7 @@ package com.laputa.zeej.flow
 
 import android.util.Log
 
-private const val TAG = "locations"
+private const val TAG = "locations_"
 fun i(msg: String) {
     Log.i(TAG, msg)
 }

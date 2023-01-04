@@ -18,10 +18,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Xsample">
-
-        <activity android:name=".std_0006_android.binder.case03.AIDLGradeActivity"
-            android:exported="false"
-            />
+        <activity
+            android:name=".HotAndColdFlowActivity"
+            android:exported="false" />
+        <activity
+            android:name=".std_0006_android.binder.case03.AIDLGradeActivity"
+            android:exported="false" />
         <activity
             android:name=".std_0006_android.binder.case01.GradeActivity"
             android:exported="false" />
@@ -66,7 +68,6 @@
                 <action android:name="android.intent.action.server.xpl.gradeservice" />
             </intent-filter>
         </service>
-
         <service
             android:name=".std_0006_android.binder.case02.UserService"
             android:process=":server_xpl">
@@ -74,7 +75,6 @@
                 <action android:name="android.intent.action.server.xpl.userservice" />
             </intent-filter>
         </service>
-
         <service
             android:name=".std_0006_android.binder.case03.AIDLService"
             android:process=":server_xpl">

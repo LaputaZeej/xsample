@@ -39,6 +39,7 @@ fun Greeting(name: String) {
 }
 
 @Preview(showBackground = true)
+@Preview(name = "demo")
 @Composable
 fun DefaultPreview() {
     XsampleTheme {

@@ -1,4 +1,4 @@
-package com.laputa.zeej.std_0010_kotlin.coroutine
+package com.laputa.zeej.std_0010_kotlin.coroutine.jw
 
 import kotlinx.coroutines.*
 import java.lang.IllegalStateException
@@ -12,14 +12,14 @@ private fun logger(msg: String?) {
 }
 
 fun main() {
-//    cancel001()
+    cancel001()
 //    cancel002()
 //    cancel003()
 //    cancel004()
 //    cancel005()
 //    cancel006()
 //    cancel007()
-    cancel008()
+//    cancel008()
 }
 
 internal fun cancel001() {
@@ -29,7 +29,10 @@ internal fun cancel001() {
         delay(100)
         logger("cancel001-01")
         throw IllegalStateException("error")
+        // 2022-03-21 抛出异常
     }
+
+
 
     coroutineScopeX.launch {
         delay(200)

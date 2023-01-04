@@ -24,7 +24,7 @@ fun factorial01(n: UInt): UInt {
 
 // 尾递归 实现
 fun factorial02(n: UInt): UInt {
-    fun factorialInner(n: UInt, result: UInt): UInt {
+    tailrec fun factorialInner(n: UInt, result: UInt): UInt {
         if (n == 0u) return result
         return factorialInner(n - 1u, n * result)
     }
@@ -70,26 +70,26 @@ inline fun timeClock(block: () -> UInt) {
 @ExperimentalTime
 suspend fun main() {
     timeClock {
-        factorial(10u)
+        factorial(50u)
     }
     timeClock {
-        factorial01(10u)
+        factorial01(50u)
     }
     timeClock {
-        factorial02(10u)
+        factorial02(50u)
     }
-    timeClock {
-        fibonacci01(50u)
-    }
-    timeClock {
-        fibonacci02(50u)
-    }
-
-    try {
-        timeClock {
-            fibonacci(50u)
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
+//    timeClock {
+//        fibonacci01(50u)
+//    }
+//    timeClock {
+//        fibonacci02(50u)
+//    }
+//
+//    try {
+//        timeClock {
+//            fibonacci(50u)
+//        }
+//    } catch (e: Exception) {
+//        e.printStackTrace()
+//    }
 }

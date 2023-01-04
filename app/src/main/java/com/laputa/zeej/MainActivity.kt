@@ -1,8 +1,12 @@
 package com.laputa.zeej
 
+import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.TransferListener
@@ -15,14 +19,18 @@ import com.laputa.zeej.gsy.GsyActivity
 import com.laputa.zeej.std_0006_android.binder.case01.GradeActivity
 import com.laputa.zeej.std_0006_android.binder.case02.ProxyGradeActivity
 import com.laputa.zeej.std_0006_android.binder.case03.AIDLGradeActivity
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import tv.danmaku.ijk.media.exo2.ExoMediaSourceInterceptListener
 import tv.danmaku.ijk.media.exo2.ExoSourceManager
 import java.io.File
+import java.lang.Exception
+import java.lang.IllegalStateException
+import java.lang.RuntimeException
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val viewModel :MainViewModel  by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,34 +38,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Example of a call to a native method
-        binding.sampleText.text = stringFromJNI()
-        // gsy
-        binding.sampleText.setOnClickListener {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),0x01)
-            Gsy2Activity.ship(this)
-        }
-
-        // flow
-        binding.actionFlow.setOnClickListener {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION),0x02)
-            LocationActivity.ship(this)
-        }
-
-        binding.actionCompose.setOnClickListener {
-            ComposeActivity.ship(this)
-        }
-
-        binding.actionBinder.setOnClickListener {
-            GradeActivity.ship(this)
-        }
-        binding.actionBinderProxy.setOnClickListener {
-            ProxyGradeActivity.ship(this)
-        }
-
-        binding.actionBinderAidl.setOnClickListener {
-            AIDLGradeActivity.ship(this)
-        }
+        binding.initViews()
         initGsy()
 
         // TextView为match_parent
@@ -70,6 +51,74 @@ class MainActivity : AppCompatActivity() {
 //            binding.tvInfo.setText(t1)
 //        }.start()
 
+    }
+
+    private fun ActivityMainBinding.initViews() {
+        // Example of a call to a native method
+        sampleText.text = stringFromJNI()
+        // gsy
+        sampleText.setOnClickListener {
+            ActivityCompat.requestPermissions(
+                this@MainActivity,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                0x01
+            )
+            Gsy2Activity.ship(this@MainActivity)
+        }
+
+        // flow
+        actionFlow.setOnClickListener {
+            ActivityCompat.requestPermissions(
+                this@MainActivity,
+                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                0x02
+            )
+            LocationActivity.ship(this@MainActivity)
+        }
+
+        actionCompose.setOnClickListener {
+            ComposeActivity.ship(this@MainActivity)
+        }
+
+        actionBinder.setOnClickListener {
+            GradeActivity.ship(this@MainActivity)
+        }
+        actionBinderProxy.setOnClickListener {
+            ProxyGradeActivity.ship(this@MainActivity)
+        }
+
+        actionBinderAidl.setOnClickListener {
+            //AIDLGradeActivity.ship(this@MainActivity)
+//            TestSupervisorJob().case02(lifecycleScope)
+            Thread.setDefaultUncaughtExceptionHandler { t, e ->
+
+            }
+            TestSupervisorJob().case01()
+//            viewModel.test()
+        }
+
+        actionFlowHotVsCold.setOnClickListener {
+//            HotAndColdFlowActivity.skip(this@MainActivity)
+            println("start")
+
+            lifecycleScope.launch {
+//            runBlocking {
+                launch {
+                    launch {
+                        delay(1000)
+                        throw IllegalStateException()
+                    }
+                    launch {
+                        delay(2000)
+                        println("job2")
+                    }
+                    delay(5000)
+                    println("end runBlocking")
+                }
+            }
+            println("end main")
+
+        }
     }
 
     /**
@@ -85,7 +134,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initGsy(){
+    private fun initGsy() {
         /*if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
