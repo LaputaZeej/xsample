@@ -13,6 +13,12 @@
         android:layout_height="wrap_content"
         android:text="Hello World!"
         />
+    <Button
+        android:id="@+id/logo_bitmap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="logo_bitmap"
+        />
 
     <Button
         android:id="@+id/action_flow"
@@ -60,6 +66,13 @@
         android:id="@+id/tv_info"
         android:text=""
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+    
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
 

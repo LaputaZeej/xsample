@@ -3,9 +3,9 @@ package com.laputa.zeej
 import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View.LAYER_TYPE_SOFTWARE
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.upstream.DataSource
@@ -14,23 +14,19 @@ import com.laputa.zeej.compose.ComposeActivity
 import com.laputa.zeej.databinding.ActivityMainBinding
 import com.laputa.zeej.flow.LocationActivity
 import com.laputa.zeej.gsy.GSYExoHttpDataSourceFactory
-import com.laputa.zeej.gsy.Gsy2Activity
-import com.laputa.zeej.gsy.GsyActivity
+import com.laputa.zeej.logo.LogoAnimationHelper
 import com.laputa.zeej.std_0006_android.binder.case01.GradeActivity
 import com.laputa.zeej.std_0006_android.binder.case02.ProxyGradeActivity
-import com.laputa.zeej.std_0006_android.binder.case03.AIDLGradeActivity
 import kotlinx.coroutines.*
 import tv.danmaku.ijk.media.exo2.ExoMediaSourceInterceptListener
 import tv.danmaku.ijk.media.exo2.ExoSourceManager
 import java.io.File
-import java.lang.Exception
 import java.lang.IllegalStateException
-import java.lang.RuntimeException
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val viewModel :MainViewModel  by viewModels()
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,13 +53,22 @@ class MainActivity : AppCompatActivity() {
         // Example of a call to a native method
         sampleText.text = stringFromJNI()
         // gsy
+        logoBitmap.setOnClickListener {
+            val logoAnimationHelper =
+                LogoAnimationHelper(this@MainActivity, lifecycleScope, R.drawable.hadlinks)
+            logoAnimationHelper.start {
+                binding.logo.setImageBitmap(it)
+            }
+        }
         sampleText.setOnClickListener {
-            ActivityCompat.requestPermissions(
-                this@MainActivity,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                0x01
-            )
-            Gsy2Activity.ship(this@MainActivity)
+//            ActivityCompat.requestPermissions(
+//                this@MainActivity,
+//                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+//                0x01
+//            )
+            //Gsy2Activity.ship(this@MainActivity)
+
+            createLogo()
         }
 
         // flow
@@ -95,6 +100,8 @@ class MainActivity : AppCompatActivity() {
             }
             TestSupervisorJob().case01()
 //            viewModel.test()
+
+
         }
 
         actionFlowHotVsCold.setOnClickListener {
@@ -119,6 +126,13 @@ class MainActivity : AppCompatActivity() {
             println("end main")
 
         }
+    }
+
+    private fun createLogo() {
+
+        val logoAnimationHelper = LogoAnimationHelper(this, lifecycleScope, R.drawable.hadlinks)
+        binding.logo.setLayerType(LAYER_TYPE_SOFTWARE, null);
+        logoAnimationHelper.produce()
     }
 
     /**
@@ -175,7 +189,7 @@ class MainActivity : AppCompatActivity() {
                 preview: Boolean,
                 cacheEnable: Boolean,
                 isLooping: Boolean,
-                cacheDir: File
+                cacheDir: File,
             ): MediaSource? {
                 //如果返回 null，就使用默认的
                 return null
@@ -191,7 +205,7 @@ class MainActivity : AppCompatActivity() {
                 connectTimeoutMillis: Int,
                 readTimeoutMillis: Int,
                 mapHeadData: Map<String, String>,
-                allowCrossProtocolRedirects: Boolean
+                allowCrossProtocolRedirects: Boolean,
             ): DataSource.Factory {
                 //如果返回 null，就使用默认的
                 val factory = GSYExoHttpDataSourceFactory(
