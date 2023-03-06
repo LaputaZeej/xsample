@@ -8,11 +8,7 @@ private fun logger(msg: String?) {
     println(msg ?: "-")
 }
 
-fun main() {
-    case01()
-//    case02()
-    readLine()
-}
+
 
 private fun case01() {
     val outerScope = CoroutineScope(Dispatchers.IO + CoroutineName("case01") + SupervisorJob())
@@ -46,18 +42,45 @@ private fun case01() {
 
 }
 
+internal val viewModelScope =
+    CoroutineScope(SupervisorJob() + Dispatchers.IO + CoroutineName("case02"))
+private var job: Job? = null
 private fun case02() {
-    val scope = CoroutineScope(Dispatchers.IO + CoroutineName("case02"))
-    scope.launch {
+    job = viewModelScope.launch {
         launch() {
             delay(1000)
-            logger("case02 -- job 01 cancel")
-            scope.cancel()
+            println("case02 -- job 01 cancel")
+            job?.cancel()
         }
 
         launch {
+            delay(2000)
+            println("case02 -- job 02 cancel")
+        }
+
+        viewModelScope.launch(Job() + Dispatchers.IO) {
             delay(3000)
-            logger("case02 -- job 02 cancel")
+            println("case03 -- job 03 cancel")
+        }
+
+        coroutineScope {
+            viewModelScope.launch {
+                delay(4000)
+                println("case04 -- job 04 cancel")
+            }
         }
     }
 }
+
+private  fun test(){
+    viewModelScope.launch {
+        delay(2000)
+        println("case04 -- job 05 cancel")
+    }
+}
+
+fun main() {
+    case02()
+    readLine()
+}
+

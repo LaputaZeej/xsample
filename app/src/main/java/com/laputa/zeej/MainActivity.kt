@@ -13,8 +13,16 @@ import com.google.android.exoplayer2.upstream.TransferListener
 import com.laputa.zeej.compose.ComposeActivity
 import com.laputa.zeej.databinding.ActivityMainBinding
 import com.laputa.zeej.flow.LocationActivity
+import com.laputa.zeej.gpio.GpioActivity
 import com.laputa.zeej.gsy.GSYExoHttpDataSourceFactory
 import com.laputa.zeej.logo.LogoAnimationHelper
+import com.laputa.zeej.std_0005_architecture.BaseActivity
+import com.laputa.zeej.std_0005_architecture.mvc.MVCActivity
+import com.laputa.zeej.std_0005_architecture.mvi.MVIActivity
+import com.laputa.zeej.std_0005_architecture.mvp.MVPActivity
+import com.laputa.zeej.std_0005_architecture.mvvm_flow.MVVMFlowActivity
+import com.laputa.zeej.std_0005_architecture.mvvm_livedata.MVVMActivity
+import com.laputa.zeej.std_0005_architecture.skip
 import com.laputa.zeej.std_0006_android.binder.case01.GradeActivity
 import com.laputa.zeej.std_0006_android.binder.case02.ProxyGradeActivity
 import kotlinx.coroutines.*
@@ -126,12 +134,29 @@ class MainActivity : AppCompatActivity() {
             println("end main")
 
         }
+
+        actionGpio.setOnClickListener {
+            GpioActivity.ship(this@MainActivity)
+        }
+
+        actionStd0005.setOnClickListener {
+            //skip<MVCActivity>()
+            //skip<MVPActivity>()
+            skip<MVVMActivity>()
+            //skip<MVVMFlowActivity>()
+            //skip<MVIActivity>()
+        }
+
+
+        lifecycleScope.launch {
+            delay(100)
+            GpioActivity.ship(this@MainActivity)
+        }
     }
 
     private fun createLogo() {
 
         val logoAnimationHelper = LogoAnimationHelper(this, lifecycleScope, R.drawable.hadlinks)
-        binding.logo.setLayerType(LAYER_TYPE_SOFTWARE, null);
         logoAnimationHelper.produce()
     }
 

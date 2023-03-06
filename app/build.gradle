@@ -16,7 +16,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cppFlags ''
+                //cppFlags.add('-std=c99')
+
             }
         }
 
@@ -124,6 +125,8 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
     implementation 'com.clj.fastble:FastBleLib:2.3.4'
+
+    implementation files('libs/tscsdk.jar')
 
 
 }

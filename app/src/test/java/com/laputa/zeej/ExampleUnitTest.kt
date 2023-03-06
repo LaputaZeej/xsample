@@ -14,6 +14,11 @@ import org.junit.Assert.*
  */
 class ExampleUnitTest {
     @Test
+    fun addition_isCorrect1() {
+
+    }
+
+    @Test
     fun addition_isCorrect() {
         println("---------")
         val src: Array<Number> = arrayOf(1, 2, 3, 45)

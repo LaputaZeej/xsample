@@ -7,6 +7,8 @@ import android.util.Log
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileOutputStream
+import java.io.ObjectInput
+import kotlin.math.log
 import kotlin.random.Random
 
 class LogoAnimationHelper(
@@ -25,13 +27,15 @@ class LogoAnimationHelper(
     private val _paint = Paint().apply {
         setColor(Color.WHITE)
         this.strokeWidth = 1f
-        this.textSize = 120f
-        this.isDither = true
+        isAntiAlias = true
         style = Paint.Style.FILL
         strokeCap = Paint.Cap.ROUND
+        textSize = 180f
     }
     private val _logoPaint = Paint().apply {
         this.strokeWidth = 10f
+        isAntiAlias = true
+
 //        this.isDither = true
 //        style = Paint.Style.FILL
 //        strokeCap = Paint.Cap.ROUND
@@ -77,7 +81,7 @@ class LogoAnimationHelper(
                 }
                 _bitmap = bitmap
                 block.invoke(bitmap)
-                delay(50)
+                delay(RUN_INTERNAL_MS_UI)
             }
             _index = 0
             _bitmap?.recycle()
@@ -85,30 +89,31 @@ class LogoAnimationHelper(
         }
     }
 
-    fun produce(dirName: String = "file4") {
+    fun produce(dirName: String = "0006") {
+        _job?.cancel()
         _job = coroutineScope.launch {
-            Log.d(TAG, "开始")
+            val start = System.currentTimeMillis()
             while (isActive && _index <= count * INDEX_STEP) {
-                _index += INDEX_STEP
-                _bitmap?.recycle()
-                withContext(Dispatchers.IO) {
-                    val bitmap = drawAndCreateBitmap("$_index")
-                    //save2local
-                    val name = generateName(_index)
-                    val file = generateFile(context, dirName, name)
-                    Log.d(TAG, file.absolutePath)
-                    saveBitmap(bitmap, file)
-                    _bitmap = bitmap
-                    delay(RUN_INTERNAL_MS)
+                val text = 1 + _index / INDEX_STEP
+                val bitmap = withContext(Dispatchers.Main) {
+                    drawAndCreateBitmap("$text")
                 }
+                val name = generateName(_index * 2 / INDEX_STEP + 1)
+                val file = generateFile(context, prefix_dirName + dirName, name)
+                withContext(Dispatchers.Main) {
+                    saveBitmap(bitmap, file)
+                }
+                Log.d(TAG, "$text -> ${file.name} | $_job")
+                delay(RUN_INTERNAL_MS_PRODUCT)
+                _index += INDEX_STEP
             }
-            Log.d(TAG, "结束")
+            Log.d(TAG, "结束,耗时${System.currentTimeMillis()-start}ms.")
             _index = 0
-            _bitmap?.recycle()
-            _bitmap = null
         }
     }
 
+
+    @Synchronized
     private fun drawAndCreateBitmap(text: String): Bitmap {
         // init
         val w = pixel.first
@@ -119,12 +124,12 @@ class LogoAnimationHelper(
 
         val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565)
         val canvas = Canvas(bitmap)
+        _matrix.reset()
         // 背景
         canvas.drawColor(Color.BLACK)
         val lastLogo = 10 // 最后几帧数据
-        if (_index >= count - lastLogo) {
-            _matrix.reset()
-            val newScale = scale + (lastLogo - (count - _index)) / 50f
+        if (_index / INDEX_STEP >= count - lastLogo) {
+            val newScale = scale + (lastLogo - (count - _index / INDEX_STEP)) / 50f
             val logoScaleHeight = logoHeight * newScale
             val logoScaleWidth = logoWidth * newScale
             _matrix.postScale(newScale, newScale)
@@ -143,11 +148,28 @@ class LogoAnimationHelper(
         _paint.alpha = 255
         _paint.getTextBounds(text, 0, text.length, _rect)
         canvas.drawText(text, (w - _rect.width()) / 2f, (h + _rect.height()) / 2f, _paint)
+
+//        Log.d(TAG, "text2 = $text")
         // 横线
         _paint.color = Color.YELLOW
         _paint.alpha = 150
-        for (row in 0 until h / UNIT_Y) {
-            if (row % 4 == 0) {
+        val hSz = h / UNIT_Y
+        for (row in 0 until hSz) {
+            if (row == 0) {
+                val startAndEndY = _paint.strokeWidth / 2
+                val startX = 0f
+                val startY = startAndEndY
+                val endX = w * 1.0f
+                val endY = startAndEndY
+                canvas.drawLine(startX, startY, endX, endY, _paint)
+            } else if (row == hSz - 1) {
+                val startAndEndY = h - _paint.strokeWidth / 2
+                val startX = 0f
+                val startY = startAndEndY
+                val endX = w * 1.0f
+                val endY = startAndEndY
+                canvas.drawLine(startX, startY, endX, endY, _paint)
+            } else if (row % 4 == 0) {
                 val startX = 0f
                 val startY = row * UNIT_Y * 1.0f
                 val endX = w * 1.0f
@@ -156,8 +178,23 @@ class LogoAnimationHelper(
             }
         }
         // 竖线
-        for (col in 0 until w / UNIT_X) {
-            if (col % 4 == 0) {
+        val vSz = w / UNIT_X
+        for (col in 0 until vSz) {
+            if (col == 0) {
+                val startAndEndX = _paint.strokeWidth / 2
+                val startX = startAndEndX
+                val startY = 0f
+                val endX = startAndEndX
+                val endY = h * 1.0f
+                canvas.drawLine(startX, startY, endX, endY, _paint)
+            } else if (col == vSz - 1) {
+                val startAndEndX = w - _paint.strokeWidth / 2
+                val startX = startAndEndX
+                val startY = 0f
+                val endX = startAndEndX
+                val endY = h * 1.0f
+                canvas.drawLine(startX, startY, endX, endY, _paint)
+            } else if (col % 4 == 0) {
                 val startX = col * UNIT_X * 1.0f
                 val startY = 0f
                 val endX = col * UNIT_X * 1.0f
@@ -167,7 +204,7 @@ class LogoAnimationHelper(
         }
 
         // logo
-        _matrix.reset()
+
         _matrix.postScale(scale, scale)
         val logoScaleHeight = logoHeight * scale
         val logoScaleWidth = logoWidth * scale
@@ -230,7 +267,6 @@ class LogoAnimationHelper(
         canvas.tail(_matrix, _deque2, 6, scale)
         canvas.tail(_matrix, _deque3, 8, scale)
         canvas.tail(_matrix, _deque4, 10, scale)
-
         return bitmap
     }
 
@@ -267,13 +303,16 @@ class LogoAnimationHelper(
 
     companion object {
         private val DEFAULT_PIXEL = 1024 to 600
-        private const val DEFAULT_COUNT = 200
+//        private val DEFAULT_PIXEL = 600 to 1024
+        private const val DEFAULT_COUNT = 100
         private const val UNIT_Y = 10
         private const val UNIT_X = 8
-        private const val MAX_STEP = 8 //*2 // 每次移动的像素
-        private const val RUN_INTERNAL_MS = 100L // 间隔时间
+        private const val MAX_STEP = 8 * 2 // 每次移动的像素
+        private const val RUN_INTERNAL_MS_PRODUCT = 10L // 间隔时间
+        private const val RUN_INTERNAL_MS_UI = 50L // 间隔时间
         private const val INDEX_STEP = 1
         private const val TAG = "logo"
+        private const val prefix_dirName = "logo"
 
         private fun generateFile(context: Context, fileDir: String, fileName: String): File {
             val file: File =
@@ -294,8 +333,9 @@ class LogoAnimationHelper(
         }
 
         private fun saveBitmap(bitmap: Bitmap, file: File) {
+            var fileOutputStream: FileOutputStream? = null
             try {
-                val fileOutputStream = FileOutputStream(file)
+                fileOutputStream = FileOutputStream(file)
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
                 fileOutputStream.flush()
                 fileOutputStream.close()
@@ -303,6 +343,10 @@ class LogoAnimationHelper(
             } catch (e: Throwable) {
                 e.printStackTrace()
             } finally {
+                fileOutputStream?.close()
+                fileOutputStream?.close()
+                fileOutputStream = null
+                bitmap.recycle()
             }
         }
     }

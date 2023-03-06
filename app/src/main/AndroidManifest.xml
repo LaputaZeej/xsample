@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Xsample">
         <activity
+            android:name=".gpio.GpioActivity"
+            android:exported="false" />
+        <activity
             android:name=".HotAndColdFlowActivity"
             android:exported="false" />
         <activity
@@ -38,6 +41,24 @@
         <activity
             android:name=".flow.LocationActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".std_0005_architecture.mvc.MVCActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".std_0005_architecture.mvp.MVPActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".std_0005_architecture.mvvm_livedata.MVVMActivity"
+            android:exported="false" />
+        <activity
+            android:name=".std_0005_architecture.mvvm_flow.MVVMFlowActivity"
+            android:exported="false" />
+        <activity
+            android:name=".std_0005_architecture.mvi.MVIActivity"
+            android:exported="false" />
         <activity
             android:name=".gsy.GsyActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
@@ -53,8 +74,8 @@
             android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:hardwareAccelerated="false"
-            android:exported="true">
+            android:exported="true"
+            android:hardwareAccelerated="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

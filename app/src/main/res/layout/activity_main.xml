@@ -1,79 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/sample_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        />
-    <Button
-        android:id="@+id/logo_bitmap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="logo_bitmap"
-        />
-
-    <Button
-        android:id="@+id/action_flow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Flow"
-        />
-
-    <Button
-        android:id="@+id/action_compose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="compose"
-        />
-
-    <Button
-        android:id="@+id/action_binder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="binder"
-        />
-
-    <Button
-        android:id="@+id/action_binder_proxy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="binder_proxy"
-        />
-
-    <Button
-        android:id="@+id/action_binder_aidl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="binder_aidl"
-        />
-
-    <Button
-        android:id="@+id/action_flow_hot_vs_cold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="flow hot vs cold"
-        />
-
-    <TextView
-        android:id="@+id/tv_info"
-        android:text=""
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-
-    
-    <ImageView
-        android:id="@+id/logo"
+    <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+            <TextView
+                android:id="@+id/tv_info1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#2f00"
+                android:lineSpacingExtra="20sp"
+                android:lineSpacingMultiplier="1.5"
+                android:text="hello"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/tv_info2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#300f"
+                android:text="hello "
+                android:textSize="22sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <Button
+            android:id="@+id/sample_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello World!" />
+
+        <Button
+            android:id="@+id/logo_bitmap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="logo_bitmap" />
+
+        <Button
+            android:id="@+id/action_flow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Flow" />
+
+        <Button
+            android:id="@+id/action_compose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="compose" />
+
+        <Button
+            android:id="@+id/action_binder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="binder" />
+
+        <Button
+            android:id="@+id/action_binder_proxy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="binder_proxy" />
+
+        <Button
+            android:id="@+id/action_binder_aidl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="binder_aidl" />
+
+        <Button
+            android:id="@+id/action_flow_hot_vs_cold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="flow hot vs cold" />
+
+        <Button
+            android:id="@+id/action_gpio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gpio" />
+
+        <Button
+            android:id="@+id/action_std_0005"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="mvx" />
+
+        <TextView
+            android:id="@+id/tv_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</ScrollView>
